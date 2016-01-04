@@ -8,14 +8,14 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var settings = require('./settings');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'html');
+app.engine('.html', require('ejs').__express);
 
 
 
@@ -42,9 +42,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.use('/', routes);
-app.use('/users', users);
+//路由层设置
+app.use('/', require('./routes/students'));
+app.use('/admin', require('./routes/admin'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -71,6 +71,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
+    console.log(err)
   res.render('error', {
     message: err.message,
     error: {}
