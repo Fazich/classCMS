@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Document</title>
+    <link rel=stylesheet href="/css/bootstrap.css">
+    <script src="/framework/vue.js"></script>
+</head>
+<style type="text/css">
+    .expand-transition {
+        transition: all .3s ease;
+        overflow: hidden;
+    }
+    .expand-enter,
+    .expand-leave {
+        height: 0;
+        opacity: 0;
+    }
+</style>
+<body id="V_tab">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid" id="V_toggle">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" v-on:click="toggle = !toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">老师界面</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="navbar-collapse" v-show="toggle" transition="expand">
+                <ul class="nav navbar-nav">
+                    <li><a target="iframe" href="/admin/classInfo" @click = "toggle = !toggle">课堂信息</a></li>
+                    <li><a target="iframe" href="/admin/questionInfo" @click = "toggle = !toggle">课堂问题</a></li>
+                    <li><a target="iframe" href="/admin/classWall" @click = "toggle = !toggle">课程墙</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);">退出</a>
+                    </li>
+                </ul>
+            </div>       
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+        <iframe id="J_iframe" name="iframe" style="width: 100%" frameborder="0" src="/admin/classInfo"></iframe>
+    <!-- toggle操作 -->
+    <script type="text/javascript">
+        new Vue({
+            el: '#V_toggle',
+            data: {
+                toggle: true
+            },
+            methods:{
+                tab:function (){
+                    console.log(this);
+                }
+            }
+        })
+    </script>
+    <script>
+        // 计算页面的实际高度，iframe自适应会用到
+        function calcPageHeight(doc) {
+            var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
+            var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
+            var height = Math.max(cHeight, sHeight)
+            return height
+        }
+        window.onload = function () {
+            var height = calcPageHeight(document)
+            parent.document.getElementById('J_iframe').style.height = height + 'px'
+        }
+    </script>
+</body>
+
+</html>
