@@ -8,35 +8,37 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>Document</title>
     <link rel=stylesheet href="/css/bootstrap.css">
+    <script src="/framework/vue.js"></script>
 </head>
 
 <body>
-    <div class="container">
-		<div>
-			<h2>信息系统</h1>
+    <div class="container" id="V_post">
+        <div>
+            <h2>信息系统</h1>
 			<ul>
 			    <li>基于MVC</li>
 			</ul>
 		</div>
+		<div  class="alert alert-danger" v-show = 'login'>{{loginInfo}}</div>
         <div class="panel panel-primary">
             <div class="panel-heading">学生登录</div>
             <div class="panel-body">
-                <div class="form-horizontal">
+                <div class="form-horizontal" >
                     <div class="form-group">
                         <label class="col-sm-2 control-label">学号</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control"placeholder="请输入您的学号">
+                            <input v-model = "number" type="text" class="form-control"placeholder="请输入您的学号">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">姓名</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" placeholder="请输入您的姓名">
+                            <input v-model = "name" type="text" class="form-control" placeholder="请输入您的姓名">
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-success btn-block">登录</button>
+                        <div class="col-sm-offset-2 col-sm-10" >
+                            <a @click = 'ajaxPost' type="submit" class="btn btn-success btn-block">登录</a>
                         </div>
                     </div>
                 </div>
@@ -46,7 +48,60 @@
         	<p>Created By:</p>
         </div>
     </div>
-    <script src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    	
+    new Vue({
+    	el:'#V_post',
+    	data:{
+    		number:'',
+    		name:'',
+    		date:'',
+    		login:false,
+    		loginInfo:''
+    	},
+    	methods:{
+    		ajaxPost:function(){
+    			var reNum = /^\d{8}$/;
+    			var reName = /^[\u4E00-\u9FA5]{2,4}$/
+    			if(reNum.test(this.number) == false){
+    				this.login = true;
+    				this.loginInfo = "学号不符合规范，请重新输入";
+    				return
+    			}
+    			if(reName.test(this.name) == false){
+    				this.login = true;
+    				this.loginInfo = "请输入正确的姓名";
+    				return
+    			}
+    			var today = new Date()
+    			this.date = today.getFullYear()+"-"+today.getMonth()+1+"-"+today.getDate()+" "+today.getHours()+":"+today.getMinutes();
+
+    			console.log(this);
+
+    			$.ajax({
+    			  type: 'POST',
+    			  url: '/',
+    			  data: {
+    			  	number:this.number,
+    			  	name:this.name,
+    			  	date:this.date
+    			  },
+    			  success: function(data){
+    			  	if(data.success){
+    			  		location.href = '/students/index';
+    			  	}
+    			  	
+    			  },
+    			  error: function(xhr, type){
+    			    alert('Ajax error!')
+    			  }
+    			})
+    		}
+    	}
+    })
+
+    </script>
+    <script src="/framework/zepto.min.js"></script>
 </body>
 
 </html>
